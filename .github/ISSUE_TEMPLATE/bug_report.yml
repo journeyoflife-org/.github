@@ -1,0 +1,114 @@
+name: Bug Report
+description: Report a defect or unexpected behaviour in this organization's software
+title: "[bug] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a detailed report.
+
+        **Do not use this form for security vulnerabilities.** Report those
+        privately as described in
+        https://github.com/journeyoflife-org/.github/blob/main/SECURITY.md .
+        Public security issues expose parishioners, pilgrims and donors before
+        a fix exists.
+
+        **Never paste real personal data.** No parishioner, pilgrim, clergy or
+        donor names, identifiers, e-mail addresses or records — this tracker is
+        public. Use synthetic values.
+
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      description: >-
+        Which repository owns this problem? These are organization-wide
+        templates, so please name it explicitly.
+      placeholder: jol-infrastructure
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One or two sentences describing the defect.
+      placeholder: >-
+        The reconciliation job exits 0 when the target collection is empty,
+        so a silent data loss is reported as success.
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: A minimal, deterministic sequence another person can run.
+      value: |
+        1. 
+        2. 
+        3. 
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behaviour
+      description: What should have happened, and why that is correct.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behaviour
+      description: >-
+        What happened instead. Include the exact error text and the command and
+        its exit status. Redact hostnames and any internal addressing.
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      description: Output of `git rev-parse --short HEAD`, or the release tag.
+      placeholder: 97fd9f1
+    validations:
+      required: true
+
+  - type: dropdown
+    id: environment
+    attributes:
+      label: Environment
+      description: Where was this observed?
+      options:
+        - development
+        - staging
+        - production
+        - not applicable
+    validations:
+      required: true
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: Impact and frequency
+      description: >-
+        Who or what is affected, how often, and whether data integrity,
+        availability or a compliance control is involved.
+      placeholder: >-
+        Every nightly run since the retention change; affected collections are
+        not rebuilt, so this is a data-loss risk.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: >-
+        Logs, diffs, linked issues. Omit anything that could identify a person.
+      value: |
+        <!-- optional -->

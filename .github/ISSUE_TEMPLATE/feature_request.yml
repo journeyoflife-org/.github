@@ -1,0 +1,104 @@
+name: Feature Request
+description: Propose a new capability or a change to existing behaviour
+title: "[feat] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Proposals are assessed against the mission, the compliance burden they
+        create, and who operates the resulting system. A feature that adds a
+        new class of personal data, a new outbound dependency, or a new
+        network path carries a much higher bar than one that does not.
+
+  - type: input
+    id: repository
+    attributes:
+      label: Repository
+      description: Which repository should own this capability?
+      placeholder: jol-rag-server
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem this solves
+      description: >-
+        The concrete situation that is impossible or expensive today, and who
+        is affected. Not a list of features.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: >-
+        What should happen, at the level of behaviour and interfaces.
+        Implementation detail can follow later.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: >-
+        Including "do nothing", and why. If a process change would solve this
+        without new code, say so.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: data-impact
+    attributes:
+      label: Personal data impact
+      description: Does the proposal create, move, retain or expose personal data?
+      options:
+        - none
+        - pseudonymous or operational telemetry only
+        - personal data (standard category)
+        - special category data, including religious affiliation
+        - payment or donation data
+        - not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: compliance
+    attributes:
+      label: Compliance and residency consequences
+      description: >-
+        GDPR lawful basis and retention, PCI-DSS scope, data residency and
+        provider region, audit evidence, and any architecture decision record
+        this would require. "None" must be justified, not assumed.
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Cross-repository and cross-system impact
+      description: >-
+        Which other repositories, services, VLAN boundaries or contracts this
+        touches, and how the change is coordinated with them.
+    validations:
+      required: true
+
+  - type: textarea
+    id: rollback
+    attributes:
+      label: Reversibility
+      description: >-
+        How the change is withdrawn if it fails, including data migration or
+        schema effects that cannot be undone by redeploying.
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
+      description: Links to issues, records or measurements.
+      value: |
+        <!-- optional -->

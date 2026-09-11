@@ -1,0 +1,24 @@
+# =============================================================================
+# CODEOWNERS — journeyoflife-org/.github
+#
+# Scope note: CODEOWNERS is NOT an organization-wide default file. This one
+# governs THIS repository only — the organization's community-health defaults.
+# Other repositories need their own CODEOWNERS to be owned.
+#
+# SOC 2 CC8.1: the branch protection ruleset requires code-owner review, so
+# these entries gate merges to main.
+# =============================================================================
+
+# Everything in this repository is a governance control surface: it changes what
+# every other repository advertises as its security, conduct and contribution
+# policy. Both owning teams are required.
+*                                   @journeyoflife-org/security @journeyoflife-org/devops
+
+# The vulnerability reporting policy and its advisory handling notes are the
+# highest-consequence files here; they are also covered by the rule above and
+# restated for explicitness in review.
+/SECURITY.md                        @journeyoflife-org/security
+/.github/ISSUE_TEMPLATE/            @journeyoflife-org/devops @journeyoflife-org/security
+
+# Organizational representation on the public profile page.
+/profile/                           @journeyoflife-org/security

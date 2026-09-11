@@ -1,0 +1,9 @@
+# Organization-wide funding links.
+#
+# Placement note: FUNDING.yml must live inside the `.github` folder of this
+# repository to be inherited by other repositories — not at the repository root.
+#
+# The custom link is the donation endpoint for the mission; it is not a
+# sponsorship arrangement for individual repositories.
+github: [journeyoflife-org]
+custom: ['https://journeyoflife.org/donate']

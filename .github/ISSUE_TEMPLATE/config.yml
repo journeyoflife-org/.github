@@ -1,0 +1,16 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/journeyoflife-org/.github/blob/main/SECURITY.md
+    about: >-
+      Read the policy and report privately. Do not open a public issue,
+      discussion or pull request for a security problem.
+  - name: Get help and support options
+    url: https://github.com/journeyoflife-org/.github/blob/main/SUPPORT.md
+    about: Where to ask, what we answer, and what we cannot promise.
+  - name: How to contribute
+    url: https://github.com/journeyoflife-org/.github/blob/main/CONTRIBUTING.md
+    about: Branch naming, signed commits, review and change-record requirements.
+  - name: Support the mission
+    url: https://journeyoflife.org/donate
+    about: This is a charitable organization; donations fund the platform.
