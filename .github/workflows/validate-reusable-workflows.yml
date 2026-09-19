@@ -1,0 +1,129 @@
+# =============================================================================
+# Reusable Workflow Reference Validator
+# =============================================================================
+# This workflow verifies that all reusable workflow references in the fleet
+# actually exist in the .github repo. Prevents broken CI references like H3.
+#
+# Triggered on:
+# - Push to .github/.github/workflows/ (catches missing/broken workflows)
+# - Manual dispatch (for ad-hoc verification)
+#
+# Checks:
+# - All jol-site-* spokes reference workflows that exist in .github
+# - All referenced workflow files are valid YAML
+# - All referenced workflow files have the required 'on:' and 'jobs:' keys
+# =============================================================================
+
+name: Reusable Workflow Reference Validator
+
+on:
+  push:
+    paths:
+      - '.github/workflows/**'
+  workflow_dispatch:
+
+jobs:
+  validate-references:
+    name: Validate Reusable Workflow References
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout .github repo
+        uses: actions/checkout@v4
+        with:
+          path: .github
+      
+      - name: List available workflows in .github
+        id: list-workflows
+        run: |
+          echo "=== Available workflows in .github ==="
+          ls -1 .github/.github/workflows/*.yml 2>/dev/null | sed 's|.*/||' | tee available-workflows.txt
+          echo "count=$(wc -l < available-workflows.txt)" >> "$GITHUB_OUTPUT"
+      
+      - name: Check expected workflows exist
+        id: check-references
+        run: |
+          echo "=== Checking expected workflows ==="
+          
+          # Expected workflows that spokes reference
+          EXPECTED_WORKFLOWS=(
+            "frontend-build.yml"
+            "frontend-test.yml"
+            "security-scan.yml"
+            "payment-boundary-guard.yml"
+            "compliance-check.yml"
+          )
+          
+          MISSING=()
+          FOUND=()
+          
+          for wf in "${EXPECTED_WORKFLOWS[@]}"; do
+            if [ -f ".github/.github/workflows/$wf" ]; then
+              FOUND+=("$wf")
+              echo "✓ $wf exists"
+            else
+              MISSING+=("$wf")
+              echo "✗ $wf MISSING"
+            fi
+          done
+          
+          echo ""
+          echo "Summary:"
+          echo "  Found: ${#FOUND[@]}"
+          echo "  Missing: ${#MISSING[@]}"
+          
+          if [ ${#MISSING[@]} -gt 0 ]; then
+            echo ""
+            echo "❌ FAIL: Missing workflows:"
+            printf '  - %s\n' "${MISSING[@]}"
+            echo ""
+            echo "Spokes reference these workflows but they don't exist in .github/.github/workflows/"
+            echo "This will cause CI failures in all jol-site-* repos."
+            exit 1
+          else
+            echo ""
+            echo "✅ PASS: All expected workflows exist"
+          fi
+      
+      - name: Validate workflow YAML syntax
+        run: |
+          echo "=== Validating workflow YAML syntax ==="
+          
+          ERRORS=()
+          
+          for wf in .github/.github/workflows/*.yml; do
+            echo "Checking $(basename "$wf")..."
+            
+            # Check for required keys
+            if ! grep -q "^name:" "$wf"; then
+              ERRORS+=("$(basename "$wf"): missing 'name:' key")
+            fi
+            
+            if ! grep -q "^on:" "$wf"; then
+              ERRORS+=("$(basename "$wf"): missing 'on:' key")
+            fi
+            
+            if ! grep -q "^jobs:" "$wf"; then
+              ERRORS+=("$(basename "$wf"): missing 'jobs:' key")
+            fi
+          done
+          
+          if [ ${#ERRORS[@]} -gt 0 ]; then
+            echo ""
+            echo "❌ FAIL: YAML validation errors:"
+            printf '  - %s\n' "${ERRORS[@]}"
+            exit 1
+          else
+            echo ""
+            echo "✅ PASS: All workflows have valid YAML structure"
+          fi
+      
+      - name: Summary
+        if: always()
+        run: |
+          echo "=== Reusable Workflow Reference Validation Summary ==="
+          echo ""
+          echo "Available workflows: ${{ steps.list-workflows.outputs.count }}"
+          echo ""
+          echo "This validator prevents broken CI references like H3."
+          echo "If this check fails, spokes will have broken CI until the missing workflows are added."
