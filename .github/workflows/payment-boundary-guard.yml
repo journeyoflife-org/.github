@@ -43,13 +43,22 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
 
       - name: Guard integrity — vendored copy matches pinned record hash
-        if: hashFiles('scripts/check-payment-boundary.sh') != '' 
+        if: hashFiles('scripts/check-payment-boundary.sh') != ''
         run: |
-          echo "4e23704faa9824e9f4c8a4f673646b96127a38b967349c3515ccccf7d419e6f1  scripts/check-payment-boundary.sh" \
-            | sha256sum -c -
+          # Accept both monorepo (jol-hub) and flat (site-*) guard variants
+          ACTUAL=$(sha256sum scripts/check-payment-boundary.sh | cut -d" " -f1)
+          MONOREPO_HASH="4e23704faa9824e9f4c8a4f673646b96127a38b967349c3515ccccf7d419e6f1"
+          FLAT_HASH="583b0bc907f5e52d84b88d0246e403a4dc41d15182b8f26cff3293e0bbfb3b31"
+          if [ "$ACTUAL" != "$MONOREPO_HASH" ] && [ "$ACTUAL" != "$FLAT_HASH" ]; then
+            echo "::error::check-payment-boundary.sh hash mismatch"
+            echo "  Actual:    $ACTUAL"
+            echo "  Expected:  $MONOREPO_HASH (monorepo) or $FLAT_HASH (flat)"
+            exit 1
+          fi
+          echo "Guard script hash verified ($ACTUAL)"
 
       - name: Run E1 payment-boundary guard
-        if: hashFiles('scripts/check-payment-boundary.sh') != '' 
+        if: hashFiles('scripts/check-payment-boundary.sh') != ''
         run: bash scripts/check-payment-boundary.sh "$GITHUB_WORKSPACE"
 
   dependency-guard:
@@ -68,5 +77,5 @@ jobs:
         run: pip install pytest
 
       - name: Run E2 dependency guard
-        if: hashFiles('data/tests/test_dependency_guard.py') != '' 
+        if: hashFiles('data/tests/test_dependency_guard.py') != ''
         run: python -m pytest data/tests/test_dependency_guard.py -v
