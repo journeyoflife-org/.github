@@ -50,7 +50,7 @@ jobs:
   gdpr-check:
     name: GDPR Compliance Check
     runs-on: ubuntu-latest
-    if: github.event.inputs.check_type == 'all' || github.event.inputs.check_type == 'gdpr' || github.event_name != 'workflow_dispatch'
+    if: ((inputs.repo-layout || 'monorepo') == 'monorepo') && (github.event.inputs.check_type == 'all' || github.event.inputs.check_type == 'gdpr' || github.event_name != 'workflow_dispatch')
     
     steps:
       - name: Checkout repository
@@ -163,7 +163,7 @@ jobs:
   automated-compliance-tests:
     name: Automated Compliance Tests (GDPR/SOC2/PCI-DSS)
     runs-on: ubuntu-latest
-    if: github.event.inputs.check_type == 'all' || github.event.inputs.check_type == 'gdpr' || github.event_name != 'workflow_dispatch'
+    if: ((inputs.repo-layout || 'monorepo') == 'monorepo') && (github.event.inputs.check_type == 'all' || github.event.inputs.check_type == 'gdpr' || github.event_name != 'workflow_dispatch')
     
     steps:
       - name: Checkout repository
@@ -272,10 +272,10 @@ jobs:
   accessibility-check:
     name: WCAG Accessibility Check
     runs-on: ubuntu-latest
-    if: github.event.inputs.check_type == 'all' || github.event.inputs.check_type == 'accessibility' || github.event_name != 'workflow_dispatch'
+    if: (github.event.inputs.check_type == 'all' || github.event.inputs.check_type == 'accessibility' || github.event_name != 'workflow_dispatch')
     defaults:
       run:
-        working-directory: frontend
+        working-directory: ${{ (inputs.repo-layout || 'monorepo') == 'monorepo' && 'frontend' || '.' }}
     
     steps:
       - name: Checkout repository
@@ -291,7 +291,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-          cache-dependency-path: 'frontend/pnpm-lock.yaml'
+          cache-dependency-path: ${{ (inputs.repo-layout || 'monorepo') == 'monorepo' && 'frontend/pnpm-lock.yaml' || 'pnpm-lock.yaml' }}
       
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -376,7 +376,7 @@ jobs:
   security-compliance:
     name: Security Compliance Check
     runs-on: ubuntu-latest
-    if: github.event.inputs.check_type == 'all' || github.event.inputs.check_type == 'security' || github.event_name != 'workflow_dispatch'
+    if: ((inputs.repo-layout || 'monorepo') == 'monorepo') && (github.event.inputs.check_type == 'all' || github.event.inputs.check_type == 'security' || github.event_name != 'workflow_dispatch')
     
     steps:
       - name: Checkout repository
