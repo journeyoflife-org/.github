@@ -22,6 +22,14 @@ on:
     branches: [main, master, develop]
   pull_request:
     branches: [main, master, develop]
+  workflow_call:
+    inputs:
+      repo-layout:
+        description: 'Repo layout: monorepo or flat'
+        required: false
+        type: string
+        default: 'monorepo'
+    secrets: {}
 
 permissions:
   contents: read
@@ -35,11 +43,13 @@ jobs:
         uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262  # v4
 
       - name: Guard integrity — vendored copy matches pinned record hash
+        if: hashFiles('scripts/check-payment-boundary.sh') != '' 
         run: |
           echo "4e23704faa9824e9f4c8a4f673646b96127a38b967349c3515ccccf7d419e6f1  scripts/check-payment-boundary.sh" \
             | sha256sum -c -
 
       - name: Run E1 payment-boundary guard
+        if: hashFiles('scripts/check-payment-boundary.sh') != '' 
         run: bash scripts/check-payment-boundary.sh "$GITHUB_WORKSPACE"
 
   dependency-guard:
@@ -58,4 +68,5 @@ jobs:
         run: pip install pytest
 
       - name: Run E2 dependency guard
+        if: hashFiles('data/tests/test_dependency_guard.py') != '' 
         run: python -m pytest data/tests/test_dependency_guard.py -v

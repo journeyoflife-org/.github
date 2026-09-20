@@ -21,6 +21,16 @@ on:
     # Run daily at 2:00 AM UTC
     - cron: '0 2 * * *'
   workflow_dispatch:
+  workflow_call:
+    inputs:
+      repo-layout:
+        description: 'Repo layout: monorepo or flat'
+        required: false
+        type: string
+        default: 'monorepo'
+    secrets:
+      SNYK_TOKEN:
+        required: false
 
 env:
   PYTHON_VERSION: '3.11'
@@ -66,6 +76,7 @@ jobs:
   
   sast-backend:
     name: SAST - Backend (Python)
+    if: (inputs.repo-layout || 'monorepo') == 'monorepo'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -103,7 +114,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@3ea06614dafe36dec890db3446326e0d40ce53d4  # v3
         if: always()
         with:
-          sarif_file: backend/django/bandit.sarif.json
+          sarif_file: ${{ (inputs.repo-layout || 'monorepo') == 'monorepo' && 'backend/django/bandit.sarif.json' || 'bandit.sarif.json' }}
           category: bandit
         continue-on-error: true
 
@@ -112,7 +123,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: frontend
+        working-directory: ${{ (inputs.repo-layout || 'monorepo') == 'monorepo' && 'frontend' || '.' }}
     
     steps:
       - name: Checkout repository
@@ -128,8 +139,14 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-          cache-dependency-path: 'frontend/pnpm-lock.yaml'
+          cache-dependency-path: ${{ (inputs.repo-layout || 'monorepo') == 'monorepo' && 'frontend/pnpm-lock.yaml' || 'pnpm-lock.yaml' }}
       
+      - name: Configure npm registry
+        run: |
+          echo "@journeyoflife-org:registry=https://npm.pkg.github.com" > .npmrc
+          echo "//npm.pkg.github.com/:_authToken=\${NODE_AUTH_TOKEN}" >> .npmrc
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       
@@ -151,6 +168,7 @@ jobs:
   
   sca-backend:
     name: SCA - Backend Dependencies
+    if: (inputs.repo-layout || 'monorepo') == 'monorepo'
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -193,7 +211,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: frontend
+        working-directory: ${{ (inputs.repo-layout || 'monorepo') == 'monorepo' && 'frontend' || '.' }}
     
     steps:
       - name: Checkout repository
@@ -209,7 +227,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
-          cache-dependency-path: 'frontend/pnpm-lock.yaml'
+          cache-dependency-path: ${{ (inputs.repo-layout || 'monorepo') == 'monorepo' && 'frontend/pnpm-lock.yaml' || 'pnpm-lock.yaml' }}
       
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -231,7 +249,7 @@ jobs:
         uses: github/codeql-action/upload-sarif@3ea06614dafe36dec890db3446326e0d40ce53d4  # v3
         if: always()
         with:
-          sarif_file: frontend/snyk.sarif
+          sarif_file: ${{ (inputs.repo-layout || 'monorepo') == 'monorepo' && 'frontend/snyk.sarif' || 'snyk.sarif' }}
           category: snyk-frontend
         continue-on-error: true
 
@@ -241,6 +259,7 @@ jobs:
   
   container-scan:
     name: Container Image Scanning
+    if: (inputs.repo-layout || 'monorepo') == 'monorepo'
     runs-on: ubuntu-latest
     
     steps:
@@ -283,6 +302,7 @@ jobs:
   
   iac-scan:
     name: Infrastructure as Code Scanning
+    if: (inputs.repo-layout || 'monorepo') == 'monorepo'
     runs-on: ubuntu-latest
     
     steps:
