@@ -37,6 +37,9 @@ env:
   NODE_VERSION: ${{ inputs.node-version }}
   PNPM_VERSION: ${{ inputs.pnpm-version }}
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build + Type Check + Lint
