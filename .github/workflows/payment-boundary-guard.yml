@@ -22,6 +22,14 @@ on:
     branches: [main, master, develop]
   pull_request:
     branches: [main, master, develop]
+    # Path guard: library file, consumed via `uses:`; mirrors its own push
+    # trigger so it does not run on documentation-only changes here.
+    paths:
+      - '**/*.py'
+      - 'backend/**'
+      - 'frontend/**'
+      - 'data/**'
+      - '.github/workflows/payment-boundary-guard.yml'
   workflow_call:
     inputs:
       repo-layout:

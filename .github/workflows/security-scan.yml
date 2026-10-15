@@ -17,6 +17,14 @@ on:
       - '.github/workflows/security-scan.yml'
   pull_request:
     branches: [main, develop]
+    # Path guard: this file is a library consumed via `uses:`. Without these
+    # paths the app-oriented scanners run in the definition repo, where
+    # backend/ and frontend/ do not exist, and fail nine checks on any PR.
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'infra/**'
+      - '.github/workflows/security-scan.yml'
   schedule:
     # Run daily at 2:00 AM UTC
     - cron: '0 2 * * *'

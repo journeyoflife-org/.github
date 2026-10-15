@@ -17,6 +17,14 @@ on:
       - '.github/workflows/compliance-check.yml'
   pull_request:
     branches: [main, master, develop]
+    # Path guard: see security-scan.yml. The pip step needs
+    # data/requirements.txt and the a11y job needs frontend/, neither of which
+    # exists in this repository, so an unfiltered trigger can only fail.
+    paths:
+      - 'backend/**'
+      - 'frontend/**'
+      - 'docs/compliance/**'
+      - '.github/workflows/compliance-check.yml'
   schedule:
     # Run weekly on Monday at 3:00 AM UTC
     - cron: '0 3 * * 1'
@@ -33,6 +41,23 @@ on:
           - accessibility
           - security
           - documentation
+
+  # Callable contract: the spokes invoke this file with
+  #   uses: journeyoflife-org/.github/.github/workflows/compliance-check.yml@main
+  #   with: { repo-layout: flat }
+  # The trigger was never declared, so every such call failed to resolve even
+  # though the jobs below already read inputs.repo-layout. Convention mirrors
+  # security-scan.yml so the library stays uniform.
+  workflow_call:
+    inputs:
+      repo-layout:
+        description: 'Repo layout: monorepo or flat'
+        required: false
+        type: string
+        default: 'monorepo'
+    secrets:
+      SNYK_TOKEN:
+        required: false
 
 env:
   PYTHON_VERSION: '3.11'
