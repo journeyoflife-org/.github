@@ -18,7 +18,7 @@ requests.
 |-----------|---------|
 | Defect in code or configuration | Open an issue in the affected repository using the bug form |
 | Enhancement or new capability | Open an issue in the affected repository using the feature form |
-| Security vulnerability | **Not an issue.** Follow [SECURITY.md](SECURITY.md) — `security@journeyoflife.org` or a private security advisory |
+| Security vulnerability | **Not an issue.** Follow [SECURITY.md](SECURITY.md) — private security advisory (preferred) or `journey4oflife+jol.security@gmail.com` |
 | Which repository owns a problem | See the organization profile README for the repository map |
 | Supporting the mission | [Donate](https://journeyoflife.org/donate) |
 

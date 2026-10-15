@@ -5,6 +5,41 @@ repository. Dates are ISO 8601. The change record for each entry is the linked
 GitHub issue, which carries the risk assessment and rollback plan required by
 SOC 2 CC8.1.
 
+## 2026-10-15 — Contact channels corrected to channels that deliver
+
+**Change record:** journeyoflife-org/.github#7
+
+Every role mailbox this repository published lives on `journeyoflife.org`, which
+has a null MX record (`MX 0 .`, RFC 7505) on Afternic parking nameservers: the
+domain disavows mail, so a report sent to it is rejected at SMTP time. Private
+vulnerability reporting was enabled on all 40 public repositories in the
+organization in the same pass, which makes the advisory channel the only one with
+an audit trail. Authority for the mapping: `journeyoflife-org/jol-control` →
+`policy/contact-channels.yml`.
+
+### Changed
+
+- `SECURITY.md` — private security advisory is now channel 1 and e-mail channel 2,
+  reversing an order that led with an address which cannot receive. The replacement
+  address is a role-labelled filter on the single maintainer mailbox, stated as such
+  rather than as a separate security function.
+- `SECURITY.md` — the change-control bullet no longer claims pull-request review
+  and code-owner approval. Both are configured but not enforced while the project has
+  one maintainer; signed commits, linear history, and blocked force-push and deletion
+  are what is actually enforced on `main`. An advertised control that fails on first
+  test costs credibility for every other assertion in the pack.
+- `SUPPORT.md`, `CODE_OF_CONDUCT.md` — same address correction. The enforcement
+  section now states the conflict of interest openly: a report about the maintainer
+  cannot be reviewed independently here, and welfare matters are referred to
+  safeguarding authorities and civil law, which are external to this project.
+
+Not changed, deliberately: the `https://journeyoflife.org/donate` links in
+`SUPPORT.md`, `.github/FUNDING.yml` and `.github/ISSUE_TEMPLATE/config.yml`. That
+domain is parked — it serves a 114-byte redirect to `/lander` — and
+`journeyoflife.eu` is parked too. No working donation endpoint exists anywhere in
+the organization, so the correct destination is an owner decision, not a guess.
+Registered as S1-004 in the jol-control findings register.
+
 ## 2026-09-12 — Organization defaults established
 
 **Change record:** journeyoflife-org/jol-infrastructure#54

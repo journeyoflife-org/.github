@@ -57,8 +57,15 @@ the safety or reputation of the project or the institutions it serves.
 
 ## Enforcement
 
-Report concerns to `security@journeyoflife.org`. Reports are reviewed by the
-organization's security and compliance owners.
+Report concerns to `journey4oflife+jol.security@gmail.com`, the organization's
+confidential intake address; conduct reports and vulnerability reports share it
+and are separated by triage, not by different people.
+
+**Known limitation, stated rather than papered over:** this organization is run by
+one maintainer, so a report *about* the maintainer cannot be reviewed independently
+and there is no code-of-conduct committee. Reports concerning the welfare of a
+person are referred immediately to the appropriate safeguarding authority and civil
+law, which are independent of this project.
 
 - Reporters are never required to provide identifying detail beyond what is
   needed to act on the report.
