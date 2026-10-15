@@ -5,6 +5,43 @@ repository. Dates are ISO 8601. The change record for each entry is the linked
 GitHub issue, which carries the risk assessment and rollback plan required by
 SOC 2 CC8.1.
 
+## 2026-10-15 — Published donation link withdrawn
+
+**Change record:** journeyoflife-org/.github#8
+
+The organization published exactly one donation path and it led nowhere.
+`https://journeyoflife.org/donate` answers HTTP 200 with a 114-byte body whose
+only content is `window.location.href="/lander"` — registrar parking served from
+Afternic nameservers on a domain that also has a null MX record. `journeyoflife.eu`
+is parked too. No donation endpoint exists in code either: the master site's
+`src/app/donate/page.tsx` carries `/* DonationWidget deferred — requires
+I18nProvider from [locale]/ layout */` and mounts nothing, and
+`DonationWidget.types.ts` declares only an optional `onConfigure` callback — no
+provider, no submit, no form action.
+
+Because GitHub renders `.github/FUNDING.yml` as the **Sponsor** button on every
+repository in the organization, this was not an inert link: it invited donors to a
+third-party advertising page under the organization's own name, on a platform whose
+`SECURITY.md` describes donor records as PCI-DSS in scope.
+
+### Removed
+
+- `.github/FUNDING.yml` — `custom:` entry deleted, list left empty, with the
+  evidence and the condition for re-adding it written into the file so the link is
+  not restored from memory.
+- `.github/ISSUE_TEMPLATE/config.yml` — the "Support the mission" contact link
+  deleted; three contact links remain.
+- `SUPPORT.md` — the "Supporting the mission" row now states plainly that no
+  online donation channel is published, instead of pointing at a parked domain.
+
+`github: [journeyoflife-org]` was left in place: it answers 200 rather than 404, so
+unlike the custom URL there is no evidence it is broken. Whether it actually
+presents sponsor tiers was **not** verified — GitHub serves a page shell either way.
+
+Tracked as S1-004 in `journeyoflife-org/jol-control` `docs/drift-findings.md`; the
+finding closes when a real endpoint exists and has been fetched to prove it is not a
+redirect.
+
 ## 2026-10-15 — Contact channels corrected to channels that deliver
 
 **Change record:** journeyoflife-org/.github#7

@@ -20,7 +20,7 @@ requests.
 | Enhancement or new capability | Open an issue in the affected repository using the feature form |
 | Security vulnerability | **Not an issue.** Follow [SECURITY.md](SECURITY.md) — private security advisory (preferred) or `journey4oflife+jol.security@gmail.com` |
 | Which repository owns a problem | See the organization profile README for the repository map |
-| Supporting the mission | [Donate](https://journeyoflife.org/donate) |
+| Supporting the mission | No online donation channel is published. The platform's payment path is not implemented, and the previously advertised URL belongs to a parked domain — see the note in `.github/FUNDING.yml` |
 
 Blank issues are disabled so that reports arrive with the detail needed to
 reproduce them. If no form fits, choose the closest one and say so in the body.
