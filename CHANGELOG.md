@@ -5,6 +5,42 @@ repository. Dates are ISO 8601. The change record for each entry is the linked
 GitHub issue, which carries the risk assessment and rollback plan required by
 SOC 2 CC8.1.
 
+## 2026-10-15 — Contact channels corrected to channels that deliver
+
+**Change record:** journeyoflife-org/.github#7
+
+Every role mailbox this repository published lives on , which
+has a null MX record (, RFC 7505) on Afternic parking nameservers: it
+disavows mail, so a report sent to it is rejected at SMTP time. Private
+vulnerability reporting was simultaneously enabled on all 40 public repositories
+in the organization, which makes the advisory channel the only one with an audit
+trail. Authority for the mapping: 
+.
+
+### Changed
+
+- : private security advisory is now channel 1 and e-mail channel 2,
+  reversing the previous order which led with an address that cannot receive. The
+  replacement address is a role-labelled filter on the single maintainer mailbox,
+  stated as such rather than as a security function.
+- : the change-control bullet no longer claims pull-request review
+  and code-owner approval. Both are configured but not enforced while the project
+  has one maintainer; signed commits, linear history, and blocked force-push and
+  deletion are what is actually enforced on . An advertised control that
+  fails on first test costs credibility for every other assertion in the pack.
+- , : same address correction. The enforcement
+  section now states the conflict of interest openly — a report about the
+  maintainer cannot be reviewed independently here, and welfare matters are
+  referred to safeguarding authorities and civil law, which are external to this
+  project.
+
+Not changed, deliberately: the  links in
+,  and . That
+domain is parked (it serves a 114-byte redirect to ) and
+ is parked too; no working donation endpoint exists anywhere in
+the organization, so the correct destination is an owner decision, not a guess.
+Registered as S1-004 in the jol-control findings register.
+
 ## 2026-09-12 — Organization defaults established
 
 **Change record:** journeyoflife-org/jol-infrastructure#54
