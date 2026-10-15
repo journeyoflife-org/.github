@@ -33,10 +33,15 @@ rather than distributed software, there is no release-version matrix.
 **Do not open a public issue, discussion or pull request for a security problem.**
 Public reports expose pilgrims, parishes and donors to risk before a fix exists.
 
-1. **Email** — `security@journeyoflife.org`
-2. **GitHub private security advisory** — use *Report a vulnerability* on the
-   Security tab of the affected repository. This creates a private thread with
-   the maintainers and is the preferred channel when the repository is known.
+1. **GitHub private security advisory** — use *Report a vulnerability* on the
+   Security tab of the affected repository. This is the preferred channel: it
+   opens a private thread with the maintainer, is tracked as an advisory with a
+   CVE and a disclosure clock, and works whether or not e-mail delivery does. It
+   is enabled on every public repository in this organization.
+2. **E-mail** — `journey4oflife+jol.security@gmail.com`, for anything that cannot
+   be filed against one repository. This is a role-labelled filter on the single
+   maintainer's mailbox: it sorts reports, it does not create a separate security
+   function, and the base address is recoverable from it.
 
 Mark the message **P1** if it enables access to personal data, donation or
 payment flows, or crosses a network trust boundary.
@@ -73,8 +78,8 @@ affiliation of parishioners — together with donation records subject to PCI-DS
   threshold is met, recording nature, categories, likely consequences and
   remediation.
 - Concerns about the welfare of a person are handled outside this technical
-  process through the appropriate safeguarding channel; send them to the same
-  address and we will route them.
+  process through the appropriate safeguarding channel; send them to the e-mail
+  address above and we will route them.
 
 ## How the platform is defended
 
@@ -89,8 +94,10 @@ topology detail or access information is published here.
 - **Network** — default-deny host firewalls with segmented VLANs separating the
   inference estate, other AI services and management access; cross-segment
   traffic requires an approved architecture decision.
-- **Change control** — protected branches requiring pull-request review,
-  code-owner approval, signed commits and linear history, per SOC 2 CC8.1.
+- **Change control** — protected branches requiring signed commits, linear history,
+  and blocked force-push and branch deletion, per SOC 2 CC8.1. Multi-reviewer approval and
+  code-owner review are configured but **not enforced** while the project is maintained by a
+  single maintainer, so they are not claimed here.
 - **Commit hygiene** — pre-commit and CI secret scanning (TruffleHog,
   git-secrets) plus static analysis (Bandit, Checkov, tfsec, OPA, Qodana).
 - **Integrity and recovery** — AIDE file-integrity monitoring and encrypted,
