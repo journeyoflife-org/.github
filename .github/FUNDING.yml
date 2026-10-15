@@ -3,7 +3,20 @@
 # Placement note: FUNDING.yml must live inside the `.github` folder of this
 # repository to be inherited by other repositories — not at the repository root.
 #
-# The custom link is the donation endpoint for the mission; it is not a
-# sponsorship arrangement for individual repositories.
+# No donation endpoint is published.
+#
+# The previous `custom:` entry pointed at https://journeyoflife.org/donate.
+# That domain is parked: it answers 200 with a 114-byte body that redirects to
+# /lander, served from registrar parking nameservers, and the domain also has a
+# null MX record (`MX 0 .`), so it receives no mail either. `journeyoflife.eu`
+# is parked as well.
+#
+# There is also no donation path in code: the master site's donate page carries
+# the comment "DonationWidget deferred" and mounts nothing, and
+# DonationWidget.types.ts declares no provider, no submit and no form action.
+#
+# Re-add a `custom:` entry ONLY when a real endpoint exists and has been
+# fetched to prove it returns the intended page rather than a redirect.
+# Tracked as S1-004 in journeyoflife-org/jol-control docs/drift-findings.md.
 github: [journeyoflife-org]
-custom: ['https://journeyoflife.org/donate']
+custom: []
