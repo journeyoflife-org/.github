@@ -5,6 +5,42 @@ repository. Dates are ISO 8601. The change record for each entry is the linked
 GitHub issue, which carries the risk assessment and rollback plan required by
 SOC 2 CC8.1.
 
+## 2026-10-15 — Library workflows stopped scanning the repository that only defines them
+
+**Change record:** journeyoflife-org/.github#9
+
+Two measured defects, one shared root: this repository holds reusable workflows for
+the rest of the organization, and they were also wired to run here.
+
+`security-scan.yml`, `compliance-check.yml` and `payment-boundary-guard.yml` filtered
+`push` by path but left `pull_request` unfiltered, so every pull request to this
+repository ran application scanners over `backend/`, `frontend/`, `src/`, `app/` and
+`data/requirements.txt` — none of which exist here. Observed on run 38805059782 and
+38805059669: `CodeQL could not process any code written in JavaScript/TypeScript`,
+`Some specified paths were not resolved, unable to cache dependencies`
+(`cache-dependency-path: frontend/pnpm-lock.yaml`), and `No file in .github matched to
+[data/requirements.txt or **/pyproject.toml]`. Nine checks failed on any change, which
+is what actually forced the `--admin` bypasses on #7 and #8 — the bypass was covering
+for impossible checks, not for a review policy. `frontend-test.yml` already had the
+guard and is untouched.
+
+`compliance-check.yml` was additionally declared unusable by its own consumers: ten
+spokes invoke it with `with: { repo-layout: flat }` while its `on:` block never
+declared `workflow_call`, and the jobs already read `inputs.repo-layout`. The contract
+is now declared, matching `security-scan.yml`.
+
+### Fixed
+
+- `pull_request` triggers on the three library workflows are path-guarded to the source
+  trees they analyze; the self-referential entries naming the workflow file itself were
+  deliberately left out, because a PR touching a library file here would otherwise
+  re-run scanners that cannot succeed in this repository. `validate-reusable-workflows.yml`
+  remains the right self-check for this repo.
+- `compliance-check.yml` declares `workflow_call` with `repo-layout` and optional
+  `SNYK_TOKEN`, so consumer call sites resolve.
+
+No `workflow_call` interface changed, so no consumer call site is affected.
+
 ## 2026-10-15 — Published donation link withdrawn
 
 **Change record:** journeyoflife-org/.github#8

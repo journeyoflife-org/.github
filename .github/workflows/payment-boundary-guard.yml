@@ -29,7 +29,6 @@ on:
       - 'backend/**'
       - 'frontend/**'
       - 'data/**'
-      - '.github/workflows/payment-boundary-guard.yml'
   workflow_call:
     inputs:
       repo-layout:

@@ -24,7 +24,6 @@ on:
       - 'backend/**'
       - 'frontend/**'
       - 'infra/**'
-      - '.github/workflows/security-scan.yml'
   schedule:
     # Run daily at 2:00 AM UTC
     - cron: '0 2 * * *'
